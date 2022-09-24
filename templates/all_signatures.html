@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% import 'signature_macros.html' as SM with context %}
+
+{% block title %}All signatures to the open letter to the WHOSTP and Subcommittee on Open Science{% endblock %}
+
+{% block content %}
+<div class="row">
+<div class="col">
+  
+<h1 class="pt-5 pb-3">Open letter to the WHOSTP and Subcommittee on Open Science</h1>
+
+<p>
+    <a href="index.html">Read the text and sign the open letter here.</a>
+</p>
+
+<h2 class="pb-3 pt-5">All signatures in random order</h2>
+
+{{ SM.signature_list(true) }}
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</div>
+</div>
+{% endblock %}

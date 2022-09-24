@@ -1,0 +1,28 @@
+{% macro single_signature(signature) %}
+    {% set F = signature.fields %}
+    <div class="card p-3">
+        <span class="sig_name">{{F.Name|e}}</span>
+        {% if F.Institution %}<span class="sig_institution">{{F.Institution|e}}</span>{% endif %}
+        {% if F.Status %}
+            {% if F.Status=="Anything else (enter below)" %}
+                <span class="sig_status">{{F["Other Position"]|e}}</span>
+            {% else %}
+                <span class="sig_status">{{F.Status|e}}</span>
+            {% endif %}
+        {% endif %}
+        {% if F.Comment %}<span class="sig_comment">{{F.Comment|e}}</span>{% endif %}
+    </div>
+{% endmacro %}
+
+{% macro signature_list(list_all) %}
+<div class="card-columns">
+    {% if not list_all %}
+        <div class="card p-3">
+            <b>The Board of Directors of <a href="https://neuromatch.io">Neuromatch</a></b>
+        </div>    
+    {% endif %}
+    {% for signature in signatures if signature.fields.Name and (list_all or signature.fields['Major Signer']) %}
+        {{ single_signature(signature) }}
+    {% endfor %}
+</div>
+{% endmacro %}
