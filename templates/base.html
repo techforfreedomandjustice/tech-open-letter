@@ -87,6 +87,24 @@
 <body>
 
 {% block navbar %}
+<nav class="navbar fixed-bottom navbar-expand-lg navbar-dark bg-dark">
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>		
+	<a href="https://airtable.com/shrsZ3oagxGX1pxQO"><button type="button" class="btn btn-primary">Sign the letter</button></a>
+	<div class="collapse navbar-collapse" id="navbarNav">
+		<div class="navbar-nav">
+			<a class="nav-item nav-link{% if page=='index.html' %} active{% endif %}" href="index.html">Read the letter{% if page=='index.html' %} <span class="sr-only">(current)</span>{% endif %}</a>
+			<a class="nav-item nav-link{% if page=='why.html' %} active{% endif %}" href="why.html">Why should I sign?{% if page=='why.html' %} <span class="sr-only">(current)</span>{% endif %}</a>
+			<a class="nav-item nav-link" href="mailto:ostp-letter@neuromatch.io">Contact us <i class="fa fa-envelope-o p-1" aria-hidden="true"></i></a>
+			<div class="nav-item nav-link">
+				Follow Neuromatch
+				<a href="https://twitter.com/neuromatch"><i class="fa fa-twitter p-1" aria-hidden="true"></i></a>
+				<a href="https://www.linkedin.com/company/neuromatch/"><i class="fa fa-linkedin-square p-1" aria-hidden="true"></i></a>	
+			</div>
+		</div>
+	</div>
+</nav>
 {% endblock %}
 
 <div class="container">

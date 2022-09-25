@@ -51,5 +51,5 @@ env.globals.update(
     )
 
 for page in ['index.html', 'all_signatures.html', 'why.html']:
-    pagesrc = env.get_template(page).render()
+    pagesrc = env.get_template(page).render(page=page)
     open(f'docs/{page}', 'w', encoding='utf-8').write(pagesrc)
