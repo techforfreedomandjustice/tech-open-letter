@@ -1,6 +1,6 @@
 {% macro single_signature(signature) %}
     {% set F = signature.fields %}
-    <div class="card p-3">
+    <div class="signature card p-3">
         <span class="sig_name">{{F.Name|e}}</span>
         {% if F.Institution %}<span class="sig_institution">{{F.Institution|e}}</span>{% endif %}
         {% if F.Status %}
@@ -17,7 +17,7 @@
 {% macro signature_list(list_all) %}
 <div class="card-columns">
     {% if not list_all %}
-        <div class="card p-3">
+        <div class="signature card p-3">
             <b>The Board of Directors of <a href="https://neuromatch.io">Neuromatch</a></b>
         </div>    
     {% endif %}
