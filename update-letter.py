@@ -26,6 +26,8 @@ for entry in university_domains:
 table_name = 'Signatures'
 signatures_table = Table(airtable_api_key, airtable_id, table_name)
 signatures = signatures_table.all()
+# Remove signatures that were withdrawn
+signatures = [signature for signature in signatures if not signature['fields'].get('Removals', None)]
 shuffle(signatures)
 
 # Generate stats
