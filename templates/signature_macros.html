@@ -14,7 +14,10 @@
     </div>
 {% endmacro %}
 
-{% macro signature_list(list_all) %}
+{% macro signature_list(list_all, recent=false) %}
+{% if recent %}
+{% set signatures = signatures_recent %}
+{% endif %}
 <div class="card-columns">
     {% if not list_all %}
         <!-- <div class="signature card p-3">

@@ -28,6 +28,17 @@ signatures_table = Table(airtable_api_key, airtable_id, table_name)
 signatures = signatures_table.all()
 # Remove signatures that were withdrawn
 signatures = [signature for signature in signatures if not signature['fields'].get('Removals', None)]
+# Remove repeated signatures (use the last one)
+sigs_with_email = dict()
+sigs_without_email = []
+for signature in signatures:
+    F = signature['fields']
+    if 'Email' in F:
+        sigs_with_email[F['Email']] = signature # replace
+    else:
+        sigs_without_email.append(signature)
+signatures = list(sigs_with_email.values())+sigs_without_email
+# Randomise order
 shuffle(signatures)
 
 # Generate stats
