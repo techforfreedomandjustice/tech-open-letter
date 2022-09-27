@@ -61,7 +61,7 @@
             <tbody>
                 {% for position, count in position_counts | dictsort(by='value', reverse=True) %}
                     <tr>
-                        <th scope="row">{{ position }}</th>
+                        <td>{{ position }}</th>
                         <td>{{ count }}</td>
                     </tr>
                 {% endfor %}
@@ -81,7 +81,7 @@
             <tbody>
                 {% for country, count in country_counts | dictsort(by='value', reverse=True) %}
                     <tr>
-                        <th scope="row">{{ country }}</th>
+                        <td>{{ country }}</th>
                         <td>{{ count }}</td>
                     </tr>
                 {% endfor %}
@@ -89,6 +89,36 @@
         </table>                
     </div>
 </div>
+
+<h3 class="pb-3 pt-3">Recent signatures</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Institution</th>
+            <th scope="col">Position</th>
+            <th class="d-none d-lg-table-cell" scope="col">Comment</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for signature in recent_signatures[:50] %}
+            {% set F = signature.fields %}
+            <tr>
+                <td><span class="sig_name">{{ F.Name | e }}</span></th>
+                <td><span class="sig_institution">{{ F.Institution | e }}</span></td>
+                <td>
+                    {% if F.Status=="Anything else (enter below)" %}
+                    <span class="sig_status">{{F["Other Position"]|e}}</span>
+                    {% else %}
+                    <span class="sig_status">{{F.Status|e}}</span>
+                    {% endif %}
+                </td>
+                <td class="d-none d-lg-table-cell"><span class="sig_comment">{{ F.Comment | e }}</span></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>                
 
 
 <p>&nbsp;</p>

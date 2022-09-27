@@ -40,6 +40,9 @@ for signature in signatures:
 signatures = list(sigs_with_email.values())+sigs_without_email
 # Randomise order
 shuffle(signatures)
+# Generate reverse ordered signatures
+recent_signatures = signatures.copy()
+recent_signatures.sort(reverse=True, key=lambda sig: sig['createdTime'])
 
 # Generate stats
 country_counts = defaultdict(int)
@@ -60,6 +63,7 @@ for row in signatures:
 env = Environment(loader=FileSystemLoader('templates'))
 env.globals.update(
     signatures=signatures,
+    recent_signatures=recent_signatures,
     country_counts=country_counts,
     position_counts=position_counts,
     sum=sum,
