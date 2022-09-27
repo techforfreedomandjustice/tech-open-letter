@@ -4,7 +4,7 @@ name: Update signatures and rebuild letter
 
 on:
   schedule:
-    - cron: "*/60 * * * *"
+    - cron: "*/15 * * * *"
   workflow_dispatch:
   
 jobs:
