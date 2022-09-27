@@ -32,6 +32,7 @@ shuffle(signatures)
 
 # Generate stats
 country_counts = defaultdict(int)
+position_counts = defaultdict(int)
 for row in signatures:
     F = row['fields']
     if 'Email' in F:
@@ -41,15 +42,18 @@ for row in signatures:
                 country_counts[dom2country[domain]] += 1
         except:
             pass
+    if 'Status' in F:
+        position_counts[F['Status']] += 1
 
 # Run templates
 env = Environment(loader=FileSystemLoader('templates'))
 env.globals.update(
     signatures=signatures,
     country_counts=country_counts,
+    position_counts=position_counts,
     sum=sum,
     )
 
-for page in ['index.html', 'all_signatures.html', 'why.html']:
+for page in ['index.html', 'all_signatures.html', 'why.html', 'stats.html']:
     pagesrc = env.get_template(page).render(page=page)
     open(f'docs/{page}', 'w', encoding='utf-8').write(pagesrc)

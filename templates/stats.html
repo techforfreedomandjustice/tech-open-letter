@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% import 'signature_macros.html' as SM with context %}
+
+{% block title %}Stats on signatures to the open letter to the WHOSTP and Subcommittee on Open Science{% endblock %}
+
+{% block content %}
+<div class="row">
+<div class="col">
+  
+<h1 class="pt-5 pb-3">Open letter to the WHOSTP and Subcommittee on Open Science</h1>
+
+<p>
+    <a href="index.html">Read the text and sign the open letter here.</a>
+</p>
+
+<h2 class="pb-3 pt-5">Statistics</h2>
+
+<h3 class="pb-3 pt-3">Summary</h3>
+
+{% set colors = ["#fbb4ae", "#b3cde3", "#ccebc5", "#decbe4", "#fed9a6"] %}
+
+<div>By position:</div>
+
+{% set sum_positions = sum(position_counts.values()) %}
+
+<div class="progress" style="height: 2em;">
+{% for position, count in (position_counts | dictsort(by='value', reverse=True))[:5] %}
+    {% set pc = (100*count)/sum_positions %}
+    <div class="progress-bar" role="progressbar" style="width: {{pc}}%; background-color: {{ colors[loop.index0] }}; color: black; text-overflow: ''; overflow: hidden; white-space: nowrap;" aria-valuenow="{{ count }}" aria-valuemin="0" aria-valuemax="100">{{ position }} : {{ count }}</div>
+{% endfor %}
+</div>
+
+<div>By country:</div>
+
+{% set sum_countries = sum(country_counts.values()) %}
+
+<div class="progress" style="height: 2em;">
+{% for country, count in (country_counts | dictsort(by='value', reverse=True))[:5] %}
+    {% set pc = (100*count)/sum_countries %}
+    <div class="progress-bar" role="progressbar" style="width: {{pc}}%; background-color: {{ colors[loop.index0] }}; color: black; text-overflow: ''; overflow: hidden; white-space: nowrap;" aria-valuenow="{{ count }}" aria-valuemin="0" aria-valuemax="100">{{ country }} : {{ count }}</div>
+{% endfor %}
+</div>
+
+<h3 class="pb-3 pt-3">Details</h3>
+
+<div class="row">
+    <div class="col-lg-6">
+        <h4 class="pb-3 pt-3">By position</h4>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Country</th>
+                    <th scope="col">Signature count</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for position, count in position_counts | dictsort(by='value', reverse=True) %}
+                    <tr>
+                        <th scope="row">{{ position }}</th>
+                        <td>{{ count }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>        
+    </div>
+    <div class="col-lg-6">
+        <h4 class="pb-3 pt-3">By country</h4>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Country</th>
+                    <th scope="col">Signature count</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for country, count in country_counts | dictsort(by='value', reverse=True) %}
+                    <tr>
+                        <th scope="row">{{ country }}</th>
+                        <td>{{ count }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>                
+    </div>
+</div>
+
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</div>
+</div>
+{% endblock %}
