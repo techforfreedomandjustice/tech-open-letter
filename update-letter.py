@@ -69,6 +69,6 @@ env.globals.update(
     sum=sum,
     )
 
-for page in ['index.html', 'all_signatures.html', 'why.html', 'stats.html']:
+for page in ['index.html', 'all_signatures.html', 'why.html', 'stats.html', 'share.html']:
     pagesrc = env.get_template(page).render(page=page)
     open(f'docs/{page}', 'w', encoding='utf-8').write(pagesrc)
