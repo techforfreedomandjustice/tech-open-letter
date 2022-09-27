@@ -17,6 +17,10 @@
 
 <h3 class="pb-3 pt-3">Summary</h3>
 
+<p>
+    Total signatures: {{ signatures | length }}.
+</p>
+
 {% set colors = ["#fbb4ae", "#b3cde3", "#ccebc5", "#decbe4", "#fed9a6"] %}
 
 <div>By position:</div>
@@ -30,7 +34,7 @@
 {% endfor %}
 </div>
 
-<div>By country:</div>
+<div>By country (verified):</div>
 
 {% set sum_countries = sum(country_counts.values()) %}
 
