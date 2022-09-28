@@ -1,11 +1,17 @@
 import json
 import os
+import datetime
+import dateutil
 
 from collections import defaultdict
 from random import shuffle
 
 from jinja2 import Template, Environment, FileSystemLoader
 from pyairtable import Table
+
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 airtable_id = os.environ.get('AIRTABLE_ID')
 airtable_api_key = os.environ.get('AIRTABLE_API_KEY')
@@ -78,6 +84,67 @@ for row in signatures:
     if 'Status' in F:
         position_counts[F['Status']] += 1
 
+# Generate graphs
+times = [dateutil.parser.parse(signature['createdTime']) for signature in signatures]
+times.sort()
+times = np.array(times)
+counts = np.arange(len(times))
+hours = [datetime.datetime(t.year, t.month, t.day, t.hour, tzinfo=datetime.timezone.utc) for t in times]
+hour_counts = defaultdict(int)
+for h in hours:
+    hour_counts[h] += 1
+hours = np.array(list(hour_counts.keys()))
+hour_counts = np.array(list(hour_counts.values()))
+I = np.argsort(hours)
+hours = hours[I]
+hour_counts = hour_counts[I]
+
+plt.figure(figsize=(10,8))
+
+plt.subplot(211)
+plt.plot(times, counts)
+plt.ylabel('Total signatures')
+plt.xticks(rotation=70)
+plt.title('Cumulative signatures')
+plt.grid(visible=True, which='both')
+
+plt.subplot(212)
+plt.grid(visible=True, which='both')
+plt.bar(hours, hour_counts, width=1/24, align='edge')
+plt.ylabel('Signatures per hour')
+plt.xticks(rotation=70)
+plt.title('Signatures per hour')
+
+plt.tight_layout()
+
+plt.savefig('docs/all_time.png')
+
+last_day_start = datetime.datetime.now(tz=datetime.timezone.utc)-datetime.timedelta(days=1)
+
+plt.figure(figsize=(10,8))
+
+hourloc = mdates.HourLocator(interval = 1)
+
+ax = plt.subplot(211)
+plt.plot(times[times>last_day_start], counts[times>last_day_start])
+plt.ylabel('Total signatures')
+plt.xticks(rotation=70)
+plt.title('Cumulative signatures')
+plt.grid(visible=True, which='both')
+ax.xaxis.set_major_locator(hourloc)
+
+ax = plt.subplot(212)
+plt.grid(visible=True, which='both')
+plt.bar(hours[hours>last_day_start], hour_counts[hours>last_day_start], width=1/24, align='edge')
+plt.ylabel('Signatures per hour')
+plt.xticks(rotation=70)
+plt.title('Signatures per hour')
+ax.xaxis.set_major_locator(hourloc)
+
+plt.tight_layout()
+
+plt.savefig('docs/last24h.png')
+
 # Run templates
 env = Environment(loader=FileSystemLoader('templates'))
 env.globals.update(
@@ -89,6 +156,6 @@ env.globals.update(
     sum=sum,
     )
 
-for page in ['index.html', 'all_signatures.html', 'why.html', 'stats.html', 'share.html', 'league.html']:
+for page in ['index.html', 'all_signatures.html', 'why.html', 'stats.html', 'share.html', 'league.html', 'graphs.html']:
     pagesrc = env.get_template(page).render(page=page)
     open(f'docs/{page}', 'w', encoding='utf-8').write(pagesrc)

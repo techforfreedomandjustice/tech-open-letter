@@ -1,2 +1,4 @@
 .env
 .vscode
+experiments.ipynb
+.ipynb_checkpoints
