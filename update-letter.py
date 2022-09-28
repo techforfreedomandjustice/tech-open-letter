@@ -66,13 +66,13 @@ for row in signatures:
             pass
     if not found_uni and 'Institution' in F and F['Institution'].strip():
         inst = F['Institution']
-        if inst in uni_name_map:
-            inst = uni_name_map[inst]
+        if inst.lower().strip() in uni_name_map:
+            inst = uni_name_map[inst.lower().strip()]
         else:
             for name in uninames:
-                if name in inst or inst in name:
-                    uni_name_map[inst] = name
-                    inst = uni_name_map[inst]
+                if name.lower().strip() in inst.lower().strip() or inst.lower().strip() in name.lower().strip():
+                    uni_name_map[inst.lower().strip()] = name
+                    inst = uni_name_map[inst.lower().strip()]
                     break
         university_counts[inst] += 1
     if 'Status' in F:
