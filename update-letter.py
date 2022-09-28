@@ -17,7 +17,9 @@ with open("./world_universities_and_domains.json", encoding='utf-8') as src_file
 # Process domain names to get mappings from domains to countries and country counts
 dom2uni = {}
 dom2country = {}
+uninames = set()
 for entry in university_domains:
+    uninames.add(entry['name'])
     for domain in entry['domains']:
         dom2uni[domain] = entry['name']
         dom2country[domain] = entry['country']
@@ -47,15 +49,32 @@ recent_signatures.sort(reverse=True, key=lambda sig: sig['createdTime'])
 # Generate stats
 country_counts = defaultdict(int)
 position_counts = defaultdict(int)
+university_counts = defaultdict(int)
+uni_name_map = dict()
 for row in signatures:
     F = row['fields']
+    found_uni = False
     if 'Email' in F:
         try:
             username, domain = F['Email'].split('@')
             if domain in dom2country:
                 country_counts[dom2country[domain]] += 1
+            if domain in dom2uni:
+                university_counts[dom2uni[domain]] += 1
+                found_uni = True
         except:
             pass
+    if not found_uni and 'Institution' in F and F['Institution'].strip():
+        inst = F['Institution']
+        if inst in uni_name_map:
+            inst = uni_name_map[inst]
+        else:
+            for name in uninames:
+                if name in inst or inst in name:
+                    uni_name_map[inst] = name
+                    inst = uni_name_map[inst]
+                    break
+        university_counts[inst] += 1
     if 'Status' in F:
         position_counts[F['Status']] += 1
 
@@ -66,9 +85,10 @@ env.globals.update(
     recent_signatures=recent_signatures,
     country_counts=country_counts,
     position_counts=position_counts,
+    university_counts=university_counts,
     sum=sum,
     )
 
-for page in ['index.html', 'all_signatures.html', 'why.html', 'stats.html', 'share.html']:
+for page in ['index.html', 'all_signatures.html', 'why.html', 'stats.html', 'share.html', 'league.html']:
     pagesrc = env.get_template(page).render(page=page)
     open(f'docs/{page}', 'w', encoding='utf-8').write(pagesrc)
