@@ -1,4 +1,4 @@
-{% macro single_signature(signature) %}
+{% macro single_signature(signature, use_timestamp=false) %}
     {% set F = signature.fields %}
     <div class="signature card p-3">
         <span class="sig_name">{{F.Name|e}}</span>
@@ -11,6 +11,9 @@
             {% endif %}
         {% endif %}
         {% if F.Comment %}<span class="sig_comment">{{F.Comment|e}}</span>{% endif %}
+        {% if use_timestamp %}
+        <span class="sig_timestamp">Signed @ {{ signature['createdTime'] }}</span>
+        {% endif %}
     </div>
 {% endmacro %}
 
@@ -25,7 +28,7 @@
         </div>     -->
     {% endif %}
     {% for signature in signatures if signature.fields.Name and (list_all or signature.fields['Major Signer']) %}
-        {{ single_signature(signature) }}
+        {{ single_signature(signature, use_timestamp=list_all) }}
     {% endfor %}
 </div>
 {% endmacro %}
