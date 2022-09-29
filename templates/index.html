@@ -76,17 +76,9 @@
 
 {{ SM.signature_list(false) }}
 
-	<!--
-<div class="card p-3 mb-3">
-	+ {{ country_counts['United States'] }} signatures verified from US academic institutions
-</div>
-<div class="card p-3 mb-3">
-	+ {{ sum(country_counts.values())-country_counts['United States'] }} signatures verified from non-US academic institutions
-</div>
--->
 <div class="card p-3 mb-3">
 	<div>
-		<a href="all_signatures.html">See all {{ signatures | length }} signatures</a> (updates hourly)
+		<a href="all_signatures.html">See all {{ signatures | length }} signatures</a> from over {{ country_counts | length }} countries and {{ verified_universities | length }} universities (updates hourly)
 	</div>
 </div>
 

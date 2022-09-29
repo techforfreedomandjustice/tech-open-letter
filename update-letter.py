@@ -56,6 +56,7 @@ recent_signatures.sort(reverse=True, key=lambda sig: sig['createdTime'])
 country_counts = defaultdict(int)
 position_counts = defaultdict(int)
 university_counts = defaultdict(int)
+verified_universities = set()
 uni_name_map = dict()
 for row in signatures:
     F = row['fields']
@@ -67,6 +68,7 @@ for row in signatures:
                 country_counts[dom2country[domain]] += 1
             if domain in dom2uni:
                 university_counts[dom2uni[domain]] += 1
+                verified_universities.add(dom2uni[domain])
                 found_uni = True
         except:
             pass
@@ -170,6 +172,7 @@ env.globals.update(
     country_counts=country_counts,
     position_counts=position_counts,
     university_counts=university_counts,
+    verified_universities=verified_universities,
     sum=sum,
     )
 
