@@ -99,50 +99,67 @@ I = np.argsort(hours)
 hours = hours[I]
 hour_counts = hour_counts[I]
 
+def range_fig(start_date=None, end_date=None, use_hours=False, label=None, legend=False, offset=None, secondary=False):
+
+    hourloc = mdates.HourLocator(interval = 1)
+
+    I = np.ones(len(times), dtype=bool)
+    if start_date is not None:
+        I = np.logical_and(I, times>=start_date)
+    if end_date is not None:
+        I = np.logical_and(I, times<end_date)
+
+    x = times[I]
+    if offset is not None:
+        x = x+offset
+
+    ax = plt.subplot(211)
+    plt.plot(x, counts[I], label=label)
+    plt.ylabel('Total signatures')
+    plt.xticks(rotation=70)
+    plt.title('Cumulative signatures')
+    plt.grid(visible=True, which='both')
+    if use_hours:
+        ax.xaxis.set_major_locator(hourloc)
+    if legend:
+        plt.legend(loc='best')
+
+    I = np.ones(len(hours), dtype=bool)
+    if start_date is not None:
+        I = np.logical_and(I, hours>=start_date)
+    if end_date is not None:
+        I = np.logical_and(I, hours<end_date)
+
+    x = hours[I]
+    if offset is not None:
+        x = x+offset
+
+    ax = plt.subplot(212)
+    plt.grid(visible=True, which='both')
+    if not secondary:
+        plt.bar(x, hour_counts[I], width=1/24, align='edge', label=label)
+    else:
+        plt.plot(x+datetime.timedelta(minutes=30), hour_counts[I], label=label, c='C1')
+    plt.ylabel('Signatures per hour')
+    plt.xticks(rotation=70)
+    plt.title('Signatures per hour')
+    if use_hours:
+        ax.xaxis.set_major_locator(hourloc)
+    if legend:
+        plt.legend(loc='best')
+
+    plt.tight_layout()
+
 plt.figure(figsize=(10,8))
-
-plt.subplot(211)
-plt.plot(times, counts)
-plt.ylabel('Total signatures')
-plt.xticks(rotation=70)
-plt.title('Cumulative signatures')
-plt.grid(visible=True, which='both')
-
-plt.subplot(212)
-plt.grid(visible=True, which='both')
-plt.bar(hours, hour_counts, width=1/24, align='edge')
-plt.ylabel('Signatures per hour')
-plt.xticks(rotation=70)
-plt.title('Signatures per hour')
-
-plt.tight_layout()
-
+range_fig()
 plt.savefig('docs/all_time.png')
 
 last_day_start = datetime.datetime.now(tz=datetime.timezone.utc)-datetime.timedelta(days=1)
+prev_day_start = datetime.datetime.now(tz=datetime.timezone.utc)-datetime.timedelta(days=2)
 
 plt.figure(figsize=(10,8))
-
-hourloc = mdates.HourLocator(interval = 1)
-
-ax = plt.subplot(211)
-plt.plot(times[times>last_day_start], counts[times>last_day_start])
-plt.ylabel('Total signatures')
-plt.xticks(rotation=70)
-plt.title('Cumulative signatures')
-plt.grid(visible=True, which='both')
-ax.xaxis.set_major_locator(hourloc)
-
-ax = plt.subplot(212)
-plt.grid(visible=True, which='both')
-plt.bar(hours[hours>last_day_start], hour_counts[hours>last_day_start], width=1/24, align='edge')
-plt.ylabel('Signatures per hour')
-plt.xticks(rotation=70)
-plt.title('Signatures per hour')
-ax.xaxis.set_major_locator(hourloc)
-
-plt.tight_layout()
-
+range_fig(start_date=last_day_start, label='Last 24h', use_hours=True)
+range_fig(start_date=prev_day_start, end_date=last_day_start, label='Previous 24h', use_hours=True, legend=True, offset=datetime.timedelta(days=1), secondary=True)
 plt.savefig('docs/last24h.png')
 
 # Run templates
