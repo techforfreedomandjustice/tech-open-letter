@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% import 'signature_macros.html' as SM with context %}
 
-{% block title %}League table of signatures to the open letter to the WHOSTP and Subcommittee on Open Science{% endblock %}
+{% block title %}International league table of signatures to the open letter to the WHOSTP and Subcommittee on Open Science{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -9,21 +9,23 @@
   
 <h1 class="pt-5 pb-3">Open letter to the WHOSTP and Subcommittee on Open Science</h1>
 
-<h2 class="pb-3 pt-5">United States league table</h2>
+<h2 class="pb-3 pt-5">International league table</h2>
 
 <table class="table">
     <thead>
         <tr>
             <th scope="col">Rank</th>
             <th scope="col">Institution</th>
+            <th scope="col">Country</th>
             <th scope="col">Count</th>
         </tr>
     </thead>
     <tbody>
-        {% for uni, count in (us_university_counts | dictsort(by='value', reverse=True))[:10] %}
+        {% for uni, count in (international_university_counts | dictsort(by='value', reverse=True))[:10] %}
             <tr>
                 <td scope="row">#{{ loop.index }}</th>
                 <td>{{ uni | e }}</td>
+                <td>{{ uni2country[uni] | e }}</td>
                 <td>{{ count }} signatures</td>
             </tr>
         {% endfor %}

@@ -24,8 +24,10 @@ with open("./world_universities_and_domains.json", encoding='utf-8') as src_file
 dom2uni = {}
 dom2country = {}
 uninames = set()
+uni2country = {}
 for entry in university_domains:
     uninames.add(entry['name'])
+    uni2country[entry['name']] = entry['country']
     for domain in entry['domains']:
         dom2uni[domain] = entry['name']
         dom2country[domain] = entry['country']
@@ -64,14 +66,14 @@ for row in signatures:
     if 'Email' in F:
         try:
             username, domain = F['Email'].split('@')
-            if domain in dom2country:
-                country_counts[dom2country[domain]] += 1
-            if domain in dom2uni:
-                university_counts[dom2uni[domain]] += 1
-                verified_universities.add(dom2uni[domain])
-                found_uni = True
         except:
-            pass
+            continue
+        if domain in dom2country:
+            country_counts[dom2country[domain]] += 1
+        if domain in dom2uni:
+            university_counts[dom2uni[domain]] += 1
+            verified_universities.add(dom2uni[domain])
+            found_uni = True
     if not found_uni and 'Institution' in F and F['Institution'].strip():
         inst = F['Institution']
         if inst.lower().strip() in uni_name_map:
@@ -85,6 +87,16 @@ for row in signatures:
         university_counts[inst] += 1
     if 'Status' in F:
         position_counts[F['Status']] += 1
+
+us_university_counts = dict()
+international_university_counts = dict()
+for k, v in university_counts.items():
+    if k not in uni2country:
+        continue
+    if uni2country[k]=="United States":
+        us_university_counts[k] = v
+    else:
+        international_university_counts[k] = v
 
 # Generate graphs
 times = [dateutil.parser.parse(signature['createdTime']) for signature in signatures]
@@ -172,10 +184,13 @@ env.globals.update(
     country_counts=country_counts,
     position_counts=position_counts,
     university_counts=university_counts,
+    us_university_counts=us_university_counts,
+    international_university_counts=international_university_counts,
     verified_universities=verified_universities,
+    uni2country=uni2country,
     sum=sum,
     )
 
-for page in ['index.html', 'all_signatures.html', 'why.html', 'stats.html', 'share.html', 'league.html', 'graphs.html']:
+for page in ['index.html', 'all_signatures.html', 'why.html', 'stats.html', 'share.html', 'league.html', 'international_league.html', 'graphs.html']:
     pagesrc = env.get_template(page).render(page=page)
     open(f'docs/{page}', 'w', encoding='utf-8').write(pagesrc)
