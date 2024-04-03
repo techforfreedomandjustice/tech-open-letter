@@ -5,25 +5,22 @@
 
 {% block content %}
 <div class="row">
-<div class="col">
-  
-<h1 class="pt-5 pb-3">Tech for Freedom and Justice</h1>
+    <div class="col">
+        <h1 class="pt-5 pb-3">Tech for Freedom and Justice</h1>
+        <p>
+            <a href="index.html">Read the text and sign the open letter here.</a>
+        </p>
+        <h2 class="pb-3 pt-5">All signatures in random order</h2>
+        <p>
+            Note that the signatures update approximately hourly. If your signature hasn't appeared yet, check you have
+            a confirmation email. If so, your signature will appear soon.
+        </p>
+        {{ SM.signature_list(true) }}
+        {{SM}}
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
 
-<p>
-    <a href="index.html">Read the text and sign the open letter here.</a>
-</p>
-
-<h2 class="pb-3 pt-5">All signatures in random order</h2>
-
-<p>
-    Note that the signatures update approximately hourly. If your signature hasn't appeared yet, check you have a confirmation email. If so, your signature will appear soon.
-</p>
-{{ SM.signature_list(true) }}
-{{SM}}
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-
-</div>
+    </div>
 </div>
 {% endblock %}
