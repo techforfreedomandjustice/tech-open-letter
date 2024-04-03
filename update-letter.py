@@ -202,6 +202,6 @@ env.globals.update(
     )
 
 # for page in ['index.html', 'all_signatures.html', 'why.html', 'stats.html', 'share.html', 'league.html', 'international_league.html', 'graphs.html']:
-for page in ['index.html']:    
+for page in ['index.html', 'all_signatures.html']:    
     pagesrc = env.get_template(page).render(page=page)
     open(f'docs/{page}', 'w', encoding='utf-8').write(pagesrc)
