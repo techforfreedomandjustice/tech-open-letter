@@ -29,8 +29,10 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Compile HTML
       env: 
-        AIRTABLE_ID: ${{ secrets.AIR_TABLE_ID }}    
-        AIRTABLE_API_KEY: ${{ secrets.AIR_TABLE_API_KEY }}    
+        AIR_TABLE_ID: ${{ secrets.AIR_TABLE_ID }}    
+        AIR_TABLE_API_KEY : ${{ secrets.AIR_TABLE_API_KEY }}
+        AIR_TABLE_BASE_ID : ${{ secrets.AIR_TABLE_BASE_ID }}
+        AIR_TABLE_NAME : ${{ secrets.AIR_TABLE_NAME }}
       run: |
         python update-letter.py
     - name: Commit & Push changes
