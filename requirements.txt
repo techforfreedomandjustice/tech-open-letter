@@ -3,4 +3,3 @@ pyairtable
 python-dateutil
 matplotlib
 numpy
-python-dotenv

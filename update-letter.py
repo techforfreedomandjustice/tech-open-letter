@@ -4,7 +4,7 @@ import os
 import datetime
 import dateutil
 
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 from collections import defaultdict
 from random import shuffle
 
@@ -15,7 +15,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
-# load_dotenv()
+load_dotenv()
 
 airtable_id = os.environ.get('AIR_TABLE_ID')
 airtable_api_key = os.environ.get('AIR_TABLE_API_KEY')
