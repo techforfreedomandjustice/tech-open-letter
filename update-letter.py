@@ -4,7 +4,6 @@ import os
 import datetime
 import dateutil
 
-
 from dotenv import load_dotenv
 from collections import defaultdict
 from random import shuffle
