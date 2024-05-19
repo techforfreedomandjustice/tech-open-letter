@@ -6,7 +6,7 @@ import dateutil
 
 from dotenv import load_dotenv
 from collections import defaultdict
-from random import shuffle
+from random import shuffle, randint
 
 from jinja2 import Template, Environment, FileSystemLoader
 from pyairtable import Table, Api
@@ -41,15 +41,36 @@ for signature in signatures:
         sigs_without_email.append(signature)
 signatures = list(sigs_with_email.values())+sigs_without_email
 
-# Randomise order
-shuffle(signatures)
+target_name = 'Paul Graham'
+
+def ensure_dict_in_top_n(lst, target_name):
+    # Insert name between 1 and n
+    n=10
+
+    # Step 1: Shuffle the list
+    shuffle(lst)
+
+    # Step 2: Check if the dictionary with the target_name is in the top n positions
+    is_in_top_n = any(d['fields']['Full name'] == target_name for d in lst[:n])
+    
+    if not is_in_top_n:
+        # Step 3: Find and remove the dictionary with the target_name from its current position
+        target_dict = next(d for d in lst if d['fields']['Full name'] == target_name)
+        lst.remove(target_dict)
+        
+        # Insert the dictionary into a random position within the top n
+        random_position = randint(0, n-1)
+        lst.insert(random_position, target_dict)
+
+    return lst
+
+signatures = ensure_dict_in_top_n(signatures, target_name)
 
 # Generate reverse ordered signatures
 recent_signatures = signatures.copy()
 recent_signatures.sort(reverse=True, key=lambda sig: sig['createdTime'])
 
 # Run templates
-
 env = Environment(loader=FileSystemLoader('templates'))
 env.globals.update(
     signatures=signatures,
