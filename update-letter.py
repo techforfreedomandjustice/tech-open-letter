@@ -42,6 +42,10 @@ for signature in signatures:
 signatures = list(sigs_with_email.values())+sigs_without_email
 
 target_name = 'Paul Graham'
+#prioritize signatures with Organizations
+#get singatures with organizations and shuffle
+#get signatures without organizations and shuffle
+#combine the 2 lists
 
 def ensure_dict_in_top_n(lst, target_name):
     # Insert name between 1 and n
