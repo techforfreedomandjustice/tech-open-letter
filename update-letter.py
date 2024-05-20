@@ -41,34 +41,62 @@ for signature in signatures:
         sigs_without_email.append(signature)
 signatures = list(sigs_with_email.values())+sigs_without_email
 
-target_name = 'Paul Graham'
+# target_name = 'Paul Graham'
+top_names = [
+    "Paul Graham",
+    "Amjad Masad",
+    "Bilal Zuberi",
+    "Deena Shakir",
+    "Molly White",
+    "Amir Nathoo",
+    "Kirsty Nathoo",
+    "James Slezak",
+    "Ezra Goldman",
+    "Chris Blauvelt",
+    "Miguel de Icaza",
+    "Aerica Shimizu Banks",
+    "Idris Mokhtarzada",
+    "Paul Biggar",
+    "Christina Noren",
+    "Sidra Qasim"
+]
+
 #prioritize signatures with Organizations
 #get singatures with organizations and shuffle
 #get signatures without organizations and shuffle
 #combine the 2 lists
 
-def ensure_dict_in_top_n(lst, target_name):
+def ensure_dict_in_top_n(lst, specific_names):
     # Insert name between 1 and n
-    n=10
+    n=50
 
-    # Step 1: Shuffle the list
-    shuffle(lst)
+    # Separate dictionaries with and without 'Organization' values
+    with_org = [d for d in lst if 'Organization' in d['fields'] and d['fields']['Organization']]
+    without_org = [d for d in lst if not ('Organization' in d['fields'] and d['fields']['Organization'])]
 
-    # Step 2: Check if the dictionary with the target_name is in the top n positions
-    is_in_top_n = any(d['fields']['Full name'] == target_name for d in lst[:n])
-    
-    if not is_in_top_n:
-        # Step 3: Find and remove the dictionary with the target_name from its current position
-        target_dict = next(d for d in lst if d['fields']['Full name'] == target_name)
-        lst.remove(target_dict)
+    # Shuffle both groups separately
+    shuffle(with_org)
+    shuffle(without_org)
+
+    # Combine the groups, ensuring 'with_org' is at the top
+    combined = with_org + without_org
+
+    # Ensure specific names are in the top n results
+    for name in specific_names:
+        is_in_top_n = any(d['fields']['Full name'] == name for d in combined[:n])
         
-        # Insert the dictionary into a random position within the top n
-        random_position = randint(0, n-1)
-        lst.insert(random_position, target_dict)
+        if not is_in_top_n:
+            # Find and remove the dictionary with the specific name
+            target_dict = next(d for d in combined if d['fields']['Full name'] == name)
+            combined.remove(target_dict)
+            
+            # Insert it into a random position within the top n
+            random_position = randint(0, n-1)
+            combined.insert(random_position, target_dict)
 
-    return lst
+    return combined
 
-signatures = ensure_dict_in_top_n(signatures, target_name)
+signatures = ensure_dict_in_top_n(signatures, top_names)
 
 # Generate reverse ordered signatures
 recent_signatures = signatures.copy()
