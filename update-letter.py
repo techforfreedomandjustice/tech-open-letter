@@ -1,4 +1,5 @@
 
+import hashlib
 import json
 import os
 import datetime
@@ -29,6 +30,21 @@ signatures = signatures_table.all()
 
 # Remove signatures that were withdrawn
 signatures = [signature for signature in signatures if not signature['fields'].get('Removals', None)]
+
+# Signatories who asked to be removed but whose row is still in Airtable, held
+# as SHA-256 of the stripped, lowercased 'Full name' so that the source of the
+# letter does not carry the name of someone who asked to be taken off it. Must
+# stay above the dedupe below, so a withdrawn row cannot win the dedupe slot
+# and mask a live one.
+withdrawn_name_hashes = {
+    '623cf9af0142763d462eafda08237a5a97258fafa255819c707ddb4b8e324744',
+}
+
+def withdrawn(signature):
+    name = (signature['fields'].get('Full name') or '').strip().lower()
+    return hashlib.sha256(name.encode('utf-8')).hexdigest() in withdrawn_name_hashes
+
+signatures = [signature for signature in signatures if not withdrawn(signature)]
 
 # Remove repeated signatures (use the last one)
 sigs_with_email = dict()
