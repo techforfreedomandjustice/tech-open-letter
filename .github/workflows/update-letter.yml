@@ -6,6 +6,15 @@ on:
   schedule:
     - cron: "0 */2 * * *"
   workflow_dispatch:
+  # So the one-off removal below takes effect on merge rather than waiting for
+  # the next scheduled run. Limited to the files that drive the build: the
+  # autopublish commits only touch docs/, so they never retrigger this.
+  push:
+    branches: [main]
+    paths:
+      - 'update-letter.py'
+      - 'oneshot_remove_signature.py'
+      - '.github/workflows/update-letter.yml'
   
 jobs:
   build:
@@ -35,6 +44,17 @@ jobs:
       run: |
         python -m pip install --upgrade pip python-dotenv
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    # One-off: honours a signatory's request to have their row removed.
+    # Deletes at most one record and cannot fail the build. Remove once a run
+    # logs "RESULT=not_found".
+    - name: One-off signature removal request
+      continue-on-error: true
+      env:
+        AIR_TABLE_API_KEY: ${{ secrets.AIR_TABLE_API_KEY }}
+        AIR_TABLE_BASE_ID: ${{ secrets.AIR_TABLE_BASE_ID }}
+        AIR_TABLE_NAME: ${{ secrets.AIR_TABLE_NAME }}
+      run: |
+        python oneshot_remove_signature.py
     - name: Compile HTML
       env: 
         AIR_TABLE_ID: ${{ secrets.AIR_TABLE_ID }}    
